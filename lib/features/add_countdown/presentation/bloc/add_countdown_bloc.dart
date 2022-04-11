@@ -172,7 +172,7 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
   }
 }
 
-class CounterObserver extends BlocObserver {
+class CountdownObserver extends BlocObserver {
   @override
   void onTransition(Bloc bloc, Transition transition) {
     // TODO: implement onTransition
