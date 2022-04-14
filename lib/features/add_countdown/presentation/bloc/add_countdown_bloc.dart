@@ -18,7 +18,7 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
               isEditingCountdown: false,
               isDateSelected: false,
               selectedCountdownIndex: null,
-              isPressed: false,
+              isFormButtonPressed: false,
               isTimeSelected: false,
               selectedColorIndex: 0,
               selectedIconIndex: 0,
@@ -34,7 +34,7 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
           eventTime: TimeOfDay.now(),
           isEditingCountdown: false,
           isDateSelected: false,
-          isPressed: false,
+          isFormButtonPressed: false,
           isTimeSelected: false,
           selectedCountdownIndex: null,
           selectedColorIndex: 0,
@@ -46,7 +46,7 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
     on<CountdownCreated>((event, emit) {
       emit(CountdownLoaded(
         addCountdown: state.addCountdown.copyWith(
-          isPressed: true,
+          isFormButtonPressed: true,
         ),
       ));
     });
@@ -80,7 +80,7 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
     on<CountdownSaved>((event, emit) {
       emit(CountdownLoaded(
         addCountdown: state.addCountdown.copyWith(
-          isPressed: false,
+          isFormButtonPressed: false,
           countdownList: state.addCountdown.countdownList
             ..add(
               Countdown(
@@ -115,7 +115,7 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
             .removeAt(state.addCountdown.selectedCountdownIndex!);
         emit(CountdownLoaded(
           addCountdown: state.addCountdown.copyWith(
-            isPressed: false,
+            isFormButtonPressed: false,
             countdownList: state.addCountdown.countdownList
               ..insert(
                 state.addCountdown.selectedCountdownIndex!,
@@ -148,7 +148,7 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
     on<CountdownEditSelected>((event, emit) {
       emit(CountdownLoaded(
         addCountdown: state.addCountdown.copyWith(
-          isPressed: true,
+          isFormButtonPressed: true,
           isEditingCountdown: true,
           selectedCountdownIndex: event.countdownIndex,
           title: state.addCountdown.countdownList[event.countdownIndex].title,

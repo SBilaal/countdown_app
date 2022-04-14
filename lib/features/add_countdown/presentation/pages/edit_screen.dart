@@ -10,7 +10,6 @@ import 'package:countdown_app/features/add_countdown/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/add_countdown_bloc.dart';
-import 'package:intl/intl.dart';
 
 class EditScreen extends StatelessWidget {
 
@@ -34,7 +33,7 @@ class EditScreen extends StatelessWidget {
                 ),
                 TextFormField(
                   initialValue: context.read<AddCountdownBloc>().state.addCountdown.title,
-                  autofocus: true,
+                  autofocus: !context.watch<AddCountdownBloc>().state.addCountdown.isFormButtonPressed,
                   cursorHeight: 30,
                   cursorColor: Colors.green.shade200,
                   style: TextStyle(fontSize: 24),
@@ -54,8 +53,8 @@ class EditScreen extends StatelessWidget {
                     var currentState = state.addCountdown;
                     return Visibility(
                       visible: currentState.title.isNotEmpty &&
-                          !currentState.isPressed,
-                      replacement: !currentState.isPressed
+                          !currentState.isFormButtonPressed,
+                      replacement: !currentState.isFormButtonPressed
                           ? SizedBox.shrink()
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

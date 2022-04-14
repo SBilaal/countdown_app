@@ -28,7 +28,7 @@ class CountdownLoaded extends CountdownState {
 class AddCountdown {
   AddCountdown({
     required this.title,
-    required this.isPressed,
+    required this.isFormButtonPressed,
     required this.eventDate,
     required this.countdownList,
     required this.eventTime,
@@ -39,7 +39,7 @@ class AddCountdown {
     required this.selectedColorIndex,
     required this.selectedIconIndex,
   });
-  late bool isPressed;
+  late bool isFormButtonPressed;
   late String title;
   late DateTime eventDate;
   late TimeOfDay eventTime;
@@ -53,7 +53,7 @@ class AddCountdown {
 
   AddCountdown copyWith({
     String? title,
-    bool? isPressed,
+    bool? isFormButtonPressed,
     DateTime? eventDate,
     TimeOfDay? eventTime,
     bool? isDateSelected,
@@ -66,7 +66,7 @@ class AddCountdown {
   }) =>
       AddCountdown(
         title: title ?? this.title,
-        isPressed: isPressed ?? this.isPressed,
+        isFormButtonPressed: isFormButtonPressed ?? this.isFormButtonPressed,
         eventDate: eventDate ?? this.eventDate,
         countdownList: countdownList ?? this.countdownList,
         eventTime: eventTime ?? this.eventTime,
