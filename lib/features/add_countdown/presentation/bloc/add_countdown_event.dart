@@ -4,7 +4,6 @@ abstract class CountdownEvent extends Equatable {
   const CountdownEvent();
 
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
 
@@ -18,7 +17,6 @@ class CountdownDateSelected extends CountdownEvent {
   const CountdownDateSelected({required this.date});
 
   @override
-  // TODO: implement props
   List<Object?> get props => super.props..add(date);
 }
 
@@ -28,7 +26,6 @@ class CountdownTimeSelected extends CountdownEvent {
   const CountdownTimeSelected({required this.time});
 
   @override
-  // TODO: implement props
   List<Object?> get props => super.props..add(time);
 }
 
@@ -37,7 +34,6 @@ class CountdownIconSelected extends CountdownEvent {
   const CountdownIconSelected({required this.iconIndex});
 
   @override
-  // TODO: implement props
   List<Object?> get props => super.props..add(iconIndex);
 }
 
@@ -45,7 +41,6 @@ class CountdownColorSelected extends CountdownEvent {
   final int colorIndex;
   const CountdownColorSelected({required this.colorIndex});
   @override
-  // TODO: implement props
   List<Object?> get props => super.props..add(colorIndex);
 }
 
@@ -53,7 +48,6 @@ class CountdownEditSelected extends CountdownEvent {
   final int countdownIndex;
   const CountdownEditSelected({required this.countdownIndex});
   @override
-  // TODO: implement props
   List<Object?> get props => super.props..add(countdownIndex);
 }
 
@@ -61,7 +55,6 @@ class CountdownDeleteSelected extends CountdownEvent {
   final int countdownIndex;
   const CountdownDeleteSelected({required this.countdownIndex});
   @override
-  // TODO: implement props
   List<Object?> get props => super.props..add(countdownIndex);
 }
 
@@ -70,7 +63,6 @@ class CountdownTitleChanged extends CountdownEvent {
   const CountdownTitleChanged({required this.title});
 
   @override
-  // TODO: implement props
   List<Object?> get props => super.props..add(title);
 }
 
