@@ -8,6 +8,14 @@ class CountdownStore {
 
   final _countdownBox = Hive.box('countdown');
 
+  Future<List<Countdown>> getAllCountdowns() async {
+    if (_countdownBox.isEmpty) {
+      return [];
+    }
+    final List<Countdown> countdownList =
+        _countdownBox.values.toList() as List<Countdown>;
+    return countdownList;
+  }
 
   Future<void> addCountdown(Countdown countdown) async {
     await _countdownBox.add(countdown);
@@ -20,5 +28,4 @@ class CountdownStore {
   Future<void> deleteCountdown(Countdown countdown) async {
     countdown.delete();
   }
-
 }
