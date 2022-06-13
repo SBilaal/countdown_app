@@ -111,6 +111,8 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
 
     on<CountdownUpdated>((event, emit) {
       if (state.addCountdown.selectedCountdownIndex != null) {
+        final oldCountdown = state.addCountdown
+            .countdownList[state.addCountdown.selectedCountdownIndex!];
         state.addCountdown.countdownList
             .removeAt(state.addCountdown.selectedCountdownIndex!);
         emit(CountdownLoaded(
@@ -120,11 +122,14 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
               ..insert(
                 state.addCountdown.selectedCountdownIndex!,
                 Countdown(
-                  id: DateTime.now().toString(),
+                  id: oldCountdown.id,
                   title: state.addCountdown.title,
                   iconIndex: state.addCountdown.selectedIconIndex,
                   colorIndex: state.addCountdown.selectedColorIndex,
-                  date: state.addCountdown.eventDate.add(
+                  date: state.addCountdown.eventDate.subtract(Duration(
+                      hours: oldCountdown.date.hour,
+                      minutes: oldCountdown.date.minute,
+                    )).add(
                     Duration(
                       hours: state.addCountdown.eventTime.hour,
                       minutes: state.addCountdown.eventTime.minute,
@@ -144,7 +149,7 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
         ),
       ));
     });
-    
+
     on<CountdownEditSelected>((event, emit) {
       emit(CountdownLoaded(
         addCountdown: state.addCountdown.copyWith(
