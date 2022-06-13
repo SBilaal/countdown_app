@@ -126,13 +126,10 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
                   title: state.addCountdown.title,
                   iconIndex: state.addCountdown.selectedIconIndex,
                   colorIndex: state.addCountdown.selectedColorIndex,
-                  date: state.addCountdown.eventDate.subtract(Duration(
-                      hours: oldCountdown.date.hour,
-                      minutes: oldCountdown.date.minute,
-                    )).add(
+                  date: state.addCountdown.eventDate.add(
                     Duration(
-                      hours: state.addCountdown.eventTime.hour,
-                      minutes: state.addCountdown.eventTime.minute,
+                      hours: state.addCountdown.eventTime.hour - oldCountdown.date.hour,
+                      minutes: state.addCountdown.eventTime.minute - oldCountdown.date.minute,
                     ),
                   ),
                 ),
