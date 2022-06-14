@@ -13,11 +13,23 @@ class Countdown extends HiveObject {
   @HiveField(0)
   late final String id;
   @HiveField(1)
-  late final String title;
+  late String title;
   @HiveField(2)
-  late final int iconIndex;
+  late int iconIndex;
   @HiveField(3)
-  late final int colorIndex;
+  late int colorIndex;
   @HiveField(4)
-  late final DateTime date;
+  late DateTime date;
+
+  void copyWith({
+    String? title,
+    int? iconIndex,
+    int? colorIndex,
+    DateTime? date,
+  }) {
+    this.date = date ?? this.date;
+    this.title = title ?? this.title;
+    this.iconIndex = iconIndex ?? this.iconIndex;
+    this.colorIndex = colorIndex ?? this.colorIndex;
+  }
 }
