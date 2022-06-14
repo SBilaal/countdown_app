@@ -6,8 +6,19 @@ import 'package:countdown_app/features/add_countdown/presentation/bloc/add_count
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EventsScreen extends StatelessWidget {
+class EventsScreen extends StatefulWidget {
+  @override
+  State<EventsScreen> createState() => _EventsScreenState();
+}
+
+class _EventsScreenState extends State<EventsScreen> {
   bool hasCountdown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AddCountdownBloc>().add(AppStarted());
+  }
 
   @override
   Widget build(BuildContext context) {
