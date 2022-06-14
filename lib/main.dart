@@ -1,21 +1,22 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:countdown_app/core/routes.dart';
+import 'package:countdown_app/features/add_countdown/data/datasources/countdown_store.dart';
+import 'package:countdown_app/features/add_countdown/data/models/countdown.dart';
+import 'package:countdown_app/features/add_countdown/data/repositories/countdown_repository.dart';
 import 'package:countdown_app/features/add_countdown/presentation/bloc/add_countdown_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() {
-  BlocOverrides.runZoned(
-    () async {
+  BlocOverrides.runZoned(() async {
+    await Hive.initFlutter();
+    Hive.registerAdapter(CountdownAdapter());
+    await Hive.openBox('countdown');
 
-      await Hive.initFlutter();
-      
-      runApp(MyApp());
-    },
-    blocObserver: CountdownObserver()
-  );
+    runApp(MyApp());
+  }, blocObserver: CountdownObserver());
 }
 
 class MyApp extends StatefulWidget {
@@ -46,7 +47,8 @@ class _MyAppState extends State<MyApp> {
         currentFocus.requestFocus(focusNode);
       },
       child: BlocProvider(
-        create: (context) => AddCountdownBloc(),
+        create: (context) => AddCountdownBloc(
+            CountdownRepository(countdownStore: CountdownStore.instance)),
         child: MaterialApp(
           title: 'Countdown App',
           theme: ThemeData(
