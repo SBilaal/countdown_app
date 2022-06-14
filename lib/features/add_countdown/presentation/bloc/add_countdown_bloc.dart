@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:countdown_app/features/add_countdown/data/models/countdown.dart';
+import 'package:countdown_app/features/add_countdown/data/repositories/countdown_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,9 @@ part 'add_countdown_event.dart';
 part 'add_countdown_state.dart';
 
 class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
-  AddCountdownBloc()
+  final CountdownRepository _countdownRepository;
+
+  AddCountdownBloc(this._countdownRepository)
       : super(
           CountdownInitial(
             addCountdown: AddCountdown(
@@ -25,11 +28,11 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
             ),
           ),
         ) {
-    on<AppStarted>((event, emit) {
-      return emit(CountdownInitial(
+    on<AppStarted>((event, emit) async {
+      emit(CountdownInitial(
         addCountdown: AddCountdown(
           title: '',
-          countdownList: state.addCountdown.countdownList,
+          countdownList: await _countdownRepository.getAllCountdowns(),
           eventDate: DateTime.now(),
           eventTime: TimeOfDay.now(),
           isEditingCountdown: false,
@@ -77,63 +80,63 @@ class AddCountdownBloc extends Bloc<CountdownEvent, CountdownState> {
           ),
         )));
 
-    on<CountdownSaved>((event, emit) {
+    on<CountdownSaved>((event, emit) async {
+      _countdownRepository.addCountdown(Countdown(
+        id: DateTime.now().toString(),
+        title: state.addCountdown.title,
+        iconIndex: state.addCountdown.selectedIconIndex,
+        colorIndex: state.addCountdown.selectedColorIndex,
+        date: state.addCountdown.eventDate.add(
+          Duration(
+            hours: state.addCountdown.eventTime.hour,
+            minutes: state.addCountdown.eventTime.minute,
+          ),
+        ),
+      ));
+      emit(CountdownLoading(addCountdown: state.addCountdown));
       emit(CountdownLoaded(
         addCountdown: state.addCountdown.copyWith(
           isFormButtonPressed: false,
-          countdownList: state.addCountdown.countdownList
-            ..add(
-              Countdown(
-                id: DateTime.now().toString(),
-                title: state.addCountdown.title,
-                iconIndex: state.addCountdown.selectedIconIndex,
-                colorIndex: state.addCountdown.selectedColorIndex,
-                date: state.addCountdown.eventDate.add(
-                  Duration(
-                    hours: state.addCountdown.eventTime.hour,
-                    minutes: state.addCountdown.eventTime.minute,
-                  ),
-                ),
-              ),
-            ),
+          countdownList: await _countdownRepository.getAllCountdowns(),
         ),
       ));
     });
 
-    on<CountdownDeleteSelected>((event, emit) {
+    on<CountdownDeleteSelected>((event, emit) async {
+      print(state.addCountdown.countdownList[event.countdownIndex].id);
+      _countdownRepository.deleteCountdown(
+          state.addCountdown.countdownList[event.countdownIndex]);
+      emit(CountdownLoading(addCountdown: state.addCountdown));
       emit(CountdownLoaded(
         addCountdown: state.addCountdown.copyWith(
-          countdownList: state.addCountdown.countdownList
-            ..removeAt(event.countdownIndex),
+          countdownList: await _countdownRepository.getAllCountdowns(),
         ),
       ));
     });
 
-    on<CountdownUpdated>((event, emit) {
+    on<CountdownUpdated>((event, emit) async {
       if (state.addCountdown.selectedCountdownIndex != null) {
         final oldCountdown = state.addCountdown
             .countdownList[state.addCountdown.selectedCountdownIndex!];
-        state.addCountdown.countdownList
-            .removeAt(state.addCountdown.selectedCountdownIndex!);
+        _countdownRepository.updateCountdown(oldCountdown
+          ..copyWith(
+            title: state.addCountdown.title,
+            iconIndex: state.addCountdown.selectedIconIndex,
+            colorIndex: state.addCountdown.selectedColorIndex,
+            date: state.addCountdown.eventDate.add(
+              Duration(
+                hours:
+                    state.addCountdown.eventTime.hour - oldCountdown.date.hour,
+                minutes: state.addCountdown.eventTime.minute -
+                    oldCountdown.date.minute,
+              ),
+            ),
+          ));
+        emit(CountdownLoading(addCountdown: state.addCountdown));
         emit(CountdownLoaded(
           addCountdown: state.addCountdown.copyWith(
             isFormButtonPressed: false,
-            countdownList: state.addCountdown.countdownList
-              ..insert(
-                state.addCountdown.selectedCountdownIndex!,
-                Countdown(
-                  id: oldCountdown.id,
-                  title: state.addCountdown.title,
-                  iconIndex: state.addCountdown.selectedIconIndex,
-                  colorIndex: state.addCountdown.selectedColorIndex,
-                  date: state.addCountdown.eventDate.add(
-                    Duration(
-                      hours: state.addCountdown.eventTime.hour - oldCountdown.date.hour,
-                      minutes: state.addCountdown.eventTime.minute - oldCountdown.date.minute,
-                    ),
-                  ),
-                ),
-              ),
+            countdownList: await _countdownRepository.getAllCountdowns(),
           ),
         ));
       }
