@@ -16,6 +16,15 @@ class CountdownInitial extends CountdownState {
   List<Object?> get props => super.props..add(addCountdown);
 }
 
+class CountdownLoading extends CountdownState {
+  const CountdownLoading({required AddCountdown addCountdown})
+      : super(addCountdown: addCountdown);
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => super.props..add(addCountdown);
+}
+
 class CountdownLoaded extends CountdownState {
   const CountdownLoaded({required AddCountdown addCountdown})
       : super(addCountdown: addCountdown);
