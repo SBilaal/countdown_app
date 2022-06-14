@@ -13,7 +13,7 @@ class CountdownStore {
       return [];
     }
     final List<Countdown> countdownList =
-        _countdownBox.values.toList() as List<Countdown>;
+        List<Countdown>.from(_countdownBox.values);
     return countdownList;
   }
 
