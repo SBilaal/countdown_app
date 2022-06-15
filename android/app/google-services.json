@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "48021147469",
+    "project_id": "countdown-app-bfa3c",
+    "storage_bucket": "countdown-app-bfa3c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48021147469:android:ab1612e8ca34e17771b104",
+        "android_client_info": {
+          "package_name": "com.example.countdown_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48021147469-1ntdkm93ahuheld9v5t2o30vbnqgv6v2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYUXwejfuqtQMExvgelqj9X1sNizWx6vg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48021147469-1ntdkm93ahuheld9v5t2o30vbnqgv6v2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
