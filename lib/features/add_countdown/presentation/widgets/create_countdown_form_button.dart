@@ -49,6 +49,7 @@ class CreateCountdownFormButton extends StatelessWidget {
             ],
           ),
           onPressed: () {
+            FocusScope.of(context).unfocus();
             context.read<AddCountdownBloc>().add(
                   CountdownCreated(),
                 );
