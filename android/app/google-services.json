@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "48021147469-8dt6l4kd4str464cton98m5i3q16qj98.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.countdown_app",
+            "certificate_hash": "45bc3e29abbd6abc07392db56d19afeece007e2f"
+          }
+        },
+        {
           "client_id": "48021147469-1ntdkm93ahuheld9v5t2o30vbnqgv6v2.apps.googleusercontent.com",
           "client_type": 3
         }
