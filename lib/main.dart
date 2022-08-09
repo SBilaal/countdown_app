@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:countdown_app/auth/bloc/auth_bloc.dart';
 import 'package:countdown_app/core/routes.dart';
 import 'package:countdown_app/features/add_countdown/data/datasources/countdown_store.dart';
 import 'package:countdown_app/features/add_countdown/data/models/countdown.dart';
@@ -15,7 +16,9 @@ import 'firebase_options.dart';
 void main() {
   BlocOverrides.runZoned(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     await Hive.initFlutter();
     Hive.registerAdapter(CountdownAdapter());
     await Hive.openBox('countdown');
@@ -51,9 +54,17 @@ class _MyAppState extends State<MyApp> {
         FocusScopeNode currentFocus = FocusScope.of(context);
         currentFocus.requestFocus(focusNode);
       },
-      child: BlocProvider(
-        create: (context) => AddCountdownBloc(
-            CountdownRepository(countdownStore: CountdownStore.instance)),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AddCountdownBloc(
+              CountdownRepository(countdownStore: CountdownStore.instance),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => AuthBloc(),
+          )
+        ],
         child: MaterialApp(
           title: 'Countdown App',
           theme: ThemeData(
