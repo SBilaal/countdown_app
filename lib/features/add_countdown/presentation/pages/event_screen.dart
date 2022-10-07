@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:countdown_app/auth/bloc/auth_bloc.dart';
-import 'package:countdown_app/auth/bloc/auth_event.dart';
-import 'package:countdown_app/auth/bloc/auth_state.dart';
 import 'package:countdown_app/core/utils.dart';
 import 'package:countdown_app/features/add_countdown/presentation/widgets/centered_add_button.dart';
 import 'package:countdown_app/features/add_countdown/presentation/widgets/countdow_menu.dart';
@@ -38,39 +36,29 @@ class _EventsScreenState extends State<EventsScreen> {
         elevation: 0,
         title: Text('Countdowns'),
         actions: [
-          BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-            return state.when(
-              loggedOut: () {
-                return IconButton(
-                  onPressed: () {
-                    context
-                        .read<AuthBloc>()
-                        .add(AuthEvent.loginButtonPressed());
-                  },
-                  icon: Icon(
-                    Icons.cloud_off,
-                    color: Colors.grey.shade300,
-                  ),
-                );
-              },
-              loggedIn: (user) {
-                return IconButton(
-                  onPressed: () {
-                    context
-                        .read<AuthBloc>()
-                        .add(AuthEvent.logoutButtonPressed());
-                  },
-                  icon: Icon(
-                    Icons.cloud,
-                    color: Colors.grey.shade300,
-                  ),
-                );
-              },
-              loading: () {
-                return Center(child: CircularProgressIndicator(color: Colors.white,));
-              },
-            );
-          }),
+          BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              return state.isLoading
+                  ? Center(
+                    child: SizedBox(
+                        height: 25,
+                        width: 25,
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
+                  )
+                  : IconButton(
+                      onPressed: () {
+                        final _authBloc = context.read<AuthBloc>();
+                        state.isAuthenticated ?? false
+                            ? _authBloc.add(AuthEvent.logoutButtonPressed())
+                            : _authBloc.add(AuthEvent.loginButtonPressed());
+                      },
+                      icon: state.isAuthenticated ?? false
+                          ? Icon(Icons.cloud, color: Colors.grey.shade300)
+                          : Icon(Icons.cloud_off, color: Colors.grey.shade300),
+                    );
+            },
+          ),
           IconButton(
             onPressed: () {},
             icon: Icon(
