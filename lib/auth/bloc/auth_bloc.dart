@@ -1,59 +1,36 @@
-import 'package:countdown_app/auth/bloc/auth_event.dart';
-import 'package:countdown_app/auth/bloc/auth_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:countdown_app/core/services/firebase_auth_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+
+part 'auth_event.dart';
+part 'auth_state.dart';
+part 'auth_bloc.freezed.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final AuthService _authService = AuthService();
 
-  AuthBloc() : super(const AuthState.loggedOut()) {
-    on<LoginButtonPressed>((event, emit) async {
-      emit(const AuthState.loading());
-      final result = await signIn();
-      if (result != null) {
-        emit(AuthState.loggedIn(result));
+  AuthBloc() : super(AuthState.initial()) {
+    on<_AuthCheckRequested>((event, emit) async {
+      final result = await _authService.getUser();
+      if (result == null) {
+        emit(state.copyWith(isAuthenticated: false));
       } else {
-        emit(const AuthState.loggedOut());
+        emit(state.copyWith(isAuthenticated: true));
       }
     });
-    on<LogoutButtonPressed>((event, emit) async {
-      emit(const AuthState.loading());
-      final result = await signOut();
-      if (result) {
-        emit(const AuthState.loggedOut());
-      }
-      else {
-        emit(AuthState.loggedIn((state as LoggedIn).user));
+    on<_LoginButtonPressed>((event, emit) async {
+      emit(state.copyWith(isLoading: true));
+      final result = await _authService.signIn();
+      if (result != null) {
+        emit(state.copyWith(isAuthenticated: true, isLoading: false));
+      } else {
+        emit(state.copyWith(isAuthenticated: false, isLoading: false));
       }
     });
-  }
-  Future signIn() async {
-    final googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) return;
-    final googleAuth = await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    try {
-      final result =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      return result.user;
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }
-
-  Future<bool> signOut() async {
-    try {
-      await _googleSignIn.signOut();
-      await FirebaseAuth.instance.signOut();
-      return true;
-    } catch (e) {
-      return false;
-    }
+    on<_LogoutButtonPressed>((event, emit) async {
+      emit(state.copyWith(isLoading: true));
+      await _authService.signOut();
+      emit(state.copyWith(isAuthenticated: false, isLoading: false));
+    });
   }
 }
