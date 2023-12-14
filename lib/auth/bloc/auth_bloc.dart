@@ -10,8 +10,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthService _authService = AuthService();
 
   AuthBloc() : super(AuthState.initial()) {
-    on<_AuthCheckRequested>((event, emit) async {
-      final result = await _authService.getUser();
+    on<_AuthCheckRequested>((event, emit) {
+      final result = _authService.getUser();
       if (result == null) {
         emit(state.copyWith(isAuthenticated: false));
       } else {
