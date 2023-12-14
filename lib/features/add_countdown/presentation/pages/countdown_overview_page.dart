@@ -5,7 +5,7 @@ import 'package:countdown_app/core/utils.dart';
 import 'package:countdown_app/features/add_countdown/presentation/countdown_reader/countdown_reader_bloc.dart';
 import 'package:countdown_app/features/add_countdown/presentation/pages/countdown_form_page.dart';
 import 'package:countdown_app/features/add_countdown/presentation/widgets/centered_add_button.dart';
-import 'package:countdown_app/features/add_countdown/presentation/widgets/countdown_menu.dart';
+import 'package:countdown_app/features/add_countdown/presentation/widgets/countdown_action_menu.dart';
 import 'package:countdown_app/features/add_countdown/presentation/widgets/countdown_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,8 +94,7 @@ class _CountdownOverviewPageState extends State<CountdownOverviewPage> {
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
-                                builder: (context) =>
-                                    CountdownMenu(countdown: countdown),
+                                builder: (context) => CountdownActionMenu(countdown: countdown),
                               );
                             },
                             child: CountdownItem(
