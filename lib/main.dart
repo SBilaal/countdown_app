@@ -57,13 +57,13 @@ class _MyAppState extends State<MyApp> {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => AddCountdownBloc(
-              CountdownRepository(countdownStore: CountdownStore.instance),
-            ),
+            create: (context) => AuthBloc()..add(AuthEvent.authCheckRequested()),
           ),
-          BlocProvider(
-            create: (context) => AuthBloc(),
-          )
+          BlocProvider(create: (context) => CountdownReaderBloc(getIt<CountdownRepository>())..add(CountdownReaderEvent.readStarted())),
+          BlocProvider(create: (context) => CountdownActorBloc(getIt<CountdownRepository>())),
+          // BlocProvider(
+          //     create: (context) =>
+          //         CountdownFormBloc(getIt<CountdownRepository>())),
         ],
         child: MaterialApp(
           title: 'Countdown App',
