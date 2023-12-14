@@ -1,30 +1,41 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+
 import 'package:countdown_app/auth/bloc/auth_bloc.dart';
 import 'package:countdown_app/core/routes.dart';
-import 'package:countdown_app/features/add_countdown/data/datasources/countdown_store.dart';
-import 'package:countdown_app/features/add_countdown/data/models/countdown.dart';
+import 'package:countdown_app/features/add_countdown/domain/entities/countdown.dart';
 import 'package:countdown_app/features/add_countdown/data/repositories/countdown_repository.dart';
-import 'package:countdown_app/features/add_countdown/presentation/bloc/add_countdown_bloc.dart';
+import 'package:countdown_app/features/add_countdown/presentation/countdown_actor/bloc/countdown_actor_bloc.dart';
+import 'package:countdown_app/features/add_countdown/presentation/countdown_reader/countdown_reader_bloc.dart';
+import 'package:countdown_app/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'firebase_options.dart';
 
-void main() {
-  BlocOverrides.runZoned(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    await Hive.initFlutter();
-    Hive.registerAdapter(CountdownAdapter());
-    await Hive.openBox('countdown');
-
-    runApp(MyApp());
-  }, blocObserver: CountdownObserver());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await Hive.initFlutter();
+  Hive.registerAdapter(CountdownAdapter());
+  await Hive.openBox('countdown');
+  configureDependencies();
+  
+  SentryFlutter.init(
+    (option) {
+      option..dsn = 'https://2d78b6ad52605a3a2d38f6917b053360@o4506075948974080.ingest.sentry.io/4506082189705216'
+      ..tracesSampleRate = 1.0
+      ..sendDefaultPii = true
+      ..attachScreenshot = true;
+    },
+    appRunner: () => runApp(SentryScreenshotWidget(child: SentryUserInteractionWidget(child: MyApp()))),
+  );
 }
 
 class MyApp extends StatefulWidget {
