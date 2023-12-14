@@ -24,7 +24,7 @@ class AuthService {
     }
   }
 
-  Future<i1.User?> getUser() async {
+  i1.User? getUser() {
     final user = _firebaseAuth.currentUser;
     return user != null ? i1.User(id: user.uid) : null;
   }
