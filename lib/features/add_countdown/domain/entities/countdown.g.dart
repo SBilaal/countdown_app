@@ -6,31 +6,31 @@ part of 'countdown.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CountdownAdapter extends TypeAdapter<Countdown> {
+class CountdownAdapter extends TypeAdapter<_$_Countdown> {
   @override
-  final int typeId = 1;
+  final int typeId = 0;
 
   @override
-  Countdown read(BinaryReader reader) {
+  _$_Countdown read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Countdown(
-      date: fields[4] as DateTime,
+    return _$_Countdown(
+      date: fields[0] as DateTime,
       title: fields[1] as String,
       iconIndex: fields[2] as int,
       colorIndex: fields[3] as int,
-      id: fields[0] as String,
+      id: fields[4] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Countdown obj) {
+  void write(BinaryWriter writer, _$_Countdown obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.date)
       ..writeByte(1)
       ..write(obj.title)
       ..writeByte(2)
@@ -38,7 +38,7 @@ class CountdownAdapter extends TypeAdapter<Countdown> {
       ..writeByte(3)
       ..write(obj.colorIndex)
       ..writeByte(4)
-      ..write(obj.date);
+      ..write(obj.id);
   }
 
   @override
