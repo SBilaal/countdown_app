@@ -7,7 +7,7 @@ part 'auth_state.dart';
 part 'auth_bloc.freezed.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthService _authService = AuthService();
+  final FirebaseAuthService _authService = FirebaseAuthService();
 
   AuthBloc() : super(AuthState.initial()) {
     on<_AuthCheckRequested>((event, emit) {
