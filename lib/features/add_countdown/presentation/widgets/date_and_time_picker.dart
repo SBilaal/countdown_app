@@ -1,40 +1,25 @@
+import 'package:countdown_app/features/add_countdown/presentation/countdown_form/bloc/countdown_form_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../bloc/add_countdown_bloc.dart';
 
 class DateAndTimePicker extends StatelessWidget {
   @override
-  Widget build(BuildContext context) =>
-      BlocBuilder<AddCountdownBloc, CountdownState>(
+  Widget build(BuildContext context) => BlocBuilder<CountdownFormBloc, CountdownFormState>(
         builder: (context, state) {
-          var currentState = state.addCountdown;
           return Row(
             children: [
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    showDatePicker(
-                            context: context,
-                            initialDate: currentState.eventDate,
-                            firstDate: DateTime.now(),
-                            lastDate: DateTime(2100))
+                    showDatePicker(context: context, initialDate: state.countdown.date, firstDate: DateTime.now(), lastDate: DateTime(2100))
                         .then((selectedDate) {
-                      context.read<AddCountdownBloc>().add(
-                          CountdownDateSelected(
-                              date: selectedDate ?? currentState.eventDate));
+                      context.read<CountdownFormBloc>().add(CountdownFormEvent.dateSelected(date: selectedDate ?? state.countdown.date));
                     });
                   },
                   child: Text(
-                    !currentState.isDateSelected
-                        ? 'Choose a date...'
-                        : DateFormat.yMMMd().format(currentState.eventDate),
-                    style: TextStyle(
-                        fontSize: 24,
-                        color: currentState.isDateSelected
-                            ? Colors.black
-                            : Colors.grey.shade400,
-                        fontWeight: FontWeight.w300),
+                    !state.isDateSelected ? 'Choose a date...' : DateFormat.yMMMd().format(state.countdown.date),
+                    style: TextStyle(fontSize: 24, color: state.isDateSelected ? Colors.black : Colors.grey.shade400, fontWeight: FontWeight.w300),
                   ),
                 ),
               ),
@@ -49,27 +34,20 @@ class DateAndTimePicker extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  var eventTime = await showTimePicker(
-                          context: context,
-                          initialTime: currentState.eventTime) ??
-                      currentState.eventTime;
+                  var eventTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(state.countdown.date)) ??
+                      TimeOfDay.fromDateTime(state.countdown.date);
 
-                  context.read<AddCountdownBloc>().add(
-                        CountdownTimeSelected(time: eventTime),
+                  context.read<CountdownFormBloc>().add(
+                        CountdownFormEvent.timeSelected(time: eventTime),
                       );
                 },
                 child: Text(
-                  !currentState.isDateSelected
+                  !state.isDateSelected
                       ? 'Time'
-                      : currentState.isTimeSelected
-                          ? currentState.eventTime.format(context)
+                      : state.isTimeSelected
+                          ? TimeOfDay.fromDateTime(state.countdown.date).format(context)
                           : 'All Day',
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: currentState.isDateSelected
-                          ? Colors.black
-                          : Colors.grey.shade400,
-                      fontWeight: FontWeight.w300),
+                  style: TextStyle(fontSize: 24, color: state.isDateSelected ? Colors.black : Colors.grey.shade400, fontWeight: FontWeight.w300),
                 ),
               ),
             ],

@@ -1,6 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:countdown_app/features/add_countdown/presentation/countdown_form/bloc/countdown_form_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/add_countdown_bloc.dart';
 
 class IconSelector extends StatelessWidget {
   @override
@@ -11,13 +13,13 @@ class IconSelector extends StatelessWidget {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                context.read<AddCountdownBloc>().add(
-                      CountdownIconSelected(iconIndex: index),
+                context.read<CountdownFormBloc>().add(
+                      CountdownFormEvent.iconSelected(iconIndex: index),
                     );
               },
-              child: BlocBuilder<AddCountdownBloc, CountdownState>(
+              child: BlocBuilder<CountdownFormBloc, CountdownFormState>(
                 builder: (context, state) => Visibility(
-                    visible: state.addCountdown.selectedIconIndex == index,
+                    visible: state.countdown.iconIndex == index,
                     child: Container(
                       // padding: EdgeInsets.all(5),
                       // margin: EdgeInsets.all(2),

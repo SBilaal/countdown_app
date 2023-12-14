@@ -69,17 +69,14 @@ class _CountdownOverviewPageState extends State<CountdownOverviewPage> {
         ],
       ),
       body: _buildCountdownList(),
-      floatingActionButton: context
-          .watch<CountdownReaderBloc>()
-          .state
-          .maybeWhen(
-              orElse: () => null,
-              data: (countdowns) => _buildFAB(countdowns.isNotEmpty, context)),
+      floatingActionButton: context.watch<CountdownReaderBloc>().state.maybeWhen(
+            orElse: () => null,
+            data: (countdowns) => _buildFAB(countdowns.isNotEmpty, context),
+          ),
     );
   }
 
-  Widget _buildCountdownList() =>
-      BlocBuilder<CountdownReaderBloc, CountdownReaderState>(
+  Widget _buildCountdownList() => BlocBuilder<CountdownReaderBloc, CountdownReaderState>(
         builder: (context, state) {
           return state.when(
               initial: () => Container(),

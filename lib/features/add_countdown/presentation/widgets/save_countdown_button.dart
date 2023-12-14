@@ -1,26 +1,29 @@
+import 'package:countdown_app/features/add_countdown/presentation/countdown_form/bloc/countdown_form_bloc.dart';
+import 'package:countdown_app/features/add_countdown/presentation/countdown_reader/countdown_reader_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/add_countdown_bloc.dart';
 
 class SaveCountdownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<AddCountdownBloc, CountdownState>(
+      BlocBuilder<CountdownFormBloc, CountdownFormState>(
         builder: (context, state) {
-          var isDateSelected = state.addCountdown.isDateSelected;
+          var isDateSelected = state.isDateSelected;
           return ElevatedButton(
+            key: const ValueKey("SaveCountdownButton"),
             onPressed: isDateSelected
                 ? () {
-                    state.addCountdown.isEditingCountdown ? context.read<AddCountdownBloc>().add(
-                          CountdownUpdated(),
-                        ) : context.read<AddCountdownBloc>().add(
-                          CountdownSaved(),
-                        );
+                    context
+                        .read<CountdownFormBloc>()
+                        .add(const CountdownFormEvent.saved());
                     Navigator.pop(context);
+                    context
+                      .read<CountdownReaderBloc>()
+                      .add(const CountdownReaderEvent.readStarted());
                   }
                 : null,
             child: Text(
-              '${state.addCountdown.isEditingCountdown ? 'Update' : 'Save'} Countdown',
+              '${state.isEditing ? 'Update' : 'Save'} Countdown',
               style: TextStyle(
                   fontSize: 18,
                   color: isDateSelected ? Colors.white : Colors.white38,
@@ -28,7 +31,7 @@ class SaveCountdownButton extends StatelessWidget {
             ),
             style: ButtonStyle(
               padding: MaterialStateProperty.all(
-                EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
               elevation: MaterialStateProperty.all(0),
               shape: MaterialStateProperty.all(

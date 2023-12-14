@@ -1,11 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:countdown_app/features/add_countdown/presentation/countdown_form/bloc/countdown_form_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/add_countdown_bloc.dart';
 
 class CreateCountdownFormButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<AddCountdownBloc, CountdownState>(
+      BlocBuilder<CountdownFormBloc, CountdownFormState>(
         builder: (context, state) => ElevatedButton(
           style: ElevatedButton.styleFrom(
             elevation: 0,
@@ -38,7 +40,7 @@ class CreateCountdownFormButton extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    state.addCountdown.title,
+                    state.countdown.title,
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -50,8 +52,8 @@ class CreateCountdownFormButton extends StatelessWidget {
           ),
           onPressed: () {
             FocusScope.of(context).unfocus();
-            context.read<AddCountdownBloc>().add(
-                  CountdownCreated(),
+            context.read<CountdownFormBloc>().add(
+                  const CountdownFormEvent.countdownCreated()
                 );
           },
         ),
