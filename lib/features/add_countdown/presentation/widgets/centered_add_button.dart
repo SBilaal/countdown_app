@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:countdown_app/features/add_countdown/presentation/bloc/add_countdown_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/countdown_form_page.dart';
 
 class CenteredAddButton extends StatelessWidget {
   @override
@@ -17,11 +17,10 @@ class CenteredAddButton extends StatelessWidget {
               size: 40,
             ),
             onPressed: () {
-              context.read<AddCountdownBloc>().add(AppStarted());
-              Navigator.pushNamed(context, '/edit_screen');
+              Navigator.pushNamed(context, CountdownFormPage.name);
             },
             style: ElevatedButton.styleFrom(
-                primary: Colors.green,
+                backgroundColor: Colors.green,
                 fixedSize: Size(70, 70),
                 shape: CircleBorder()),
           ),
