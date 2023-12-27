@@ -14,7 +14,9 @@ class DateAndTimePicker extends StatelessWidget {
                   onTap: () {
                     showDatePicker(context: context, initialDate: state.countdown.date, firstDate: DateTime.now(), lastDate: DateTime(2100))
                         .then((selectedDate) {
-                      context.read<CountdownFormBloc>().add(CountdownFormEvent.dateSelected(date: selectedDate ?? state.countdown.date));
+                      if (selectedDate != null) {
+                        context.read<CountdownFormBloc>().add(CountdownFormEvent.dateSelected(date: selectedDate));
+                      }
                     });
                   },
                   child: Text(
@@ -34,12 +36,10 @@ class DateAndTimePicker extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  var eventTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(state.countdown.date)) ??
-                      TimeOfDay.fromDateTime(state.countdown.date);
-
-                  context.read<CountdownFormBloc>().add(
-                        CountdownFormEvent.timeSelected(time: eventTime),
-                      );
+                  var eventTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(state.countdown.date));
+                  if (eventTime != null) {
+                    context.read<CountdownFormBloc>().add(CountdownFormEvent.timeSelected(time: eventTime));
+                  }
                 },
                 child: Text(
                   !state.isDateSelected
